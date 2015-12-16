@@ -13,7 +13,7 @@ public class ArgumentParserTest {
     public void theClsOptionShouldBeRequired() {
         try {
             ArgumentParser.parse(new String[] {});
-            Assert.fail();
+            Assert.fail("No exception caught!");
         } catch (ParseException e) {}
     }
 }

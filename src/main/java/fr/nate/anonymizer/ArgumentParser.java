@@ -16,7 +16,7 @@ public class ArgumentParser {
      * @param args the args argument to the main method.
      * @return an instance of ArgumentParser.
      */
-    public static ArgumentParser parse(String[] args) {
+    public static ArgumentParser parse(String[] args) throws ParseException {
         logger.debug("Parsing arguments: [{}]", String.join(", ", args));
         Options o = new Options();
         o.addOption(Option.builder("c")
@@ -36,8 +36,7 @@ public class ArgumentParser {
         } catch (ParseException e) {
             HelpFormatter hf = new HelpFormatter();
             hf.printHelp("java -jar anonymizer.jar [-h] -c <cls> files...", o);
-            System.exit(-1);
-            return null;
+            throw e;
         }
     }
 

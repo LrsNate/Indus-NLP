@@ -7,6 +7,7 @@ import org.apache.commons.cli.ParseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 
 /**
@@ -22,9 +23,9 @@ public class Anonymizer {
             InputProvider ip = new InputProvider(argp.getFiles());
             logger.info("Loading classifier: {}", String.valueOf(argp.getClassifier()));
             logger.info("Using files: {}", String.join(", ", argp.getFiles()));
-            AbstractSequenceClassifier<CoreLabel> classifier =
-                    CRFClassifier.getClassifier(argp.getClassifier());
-            logger.info(classifier.classifyToString("Barack Obama met his mother a few days ago."));
+            NamedEntityRecognizer ner = new NamedEntityRecognizer(argp.getClassifier());
+            BufferedReader br = ip.nextReader();
+            logger.info(ner.classify(br.readLine()));
         } catch (ParseException e) {
             System.exit(-1);
         } catch (Exception e) {

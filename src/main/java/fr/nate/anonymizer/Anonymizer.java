@@ -19,6 +19,7 @@ public class Anonymizer {
     public static void main(String[] args) {
         try {
             ArgumentParser argp = ArgumentParser.parse(args);
+            InputProvider ip = new InputProvider(argp.getFiles());
             logger.info("Loading classifier: {}", String.valueOf(argp.getClassifier()));
             logger.info("Using files: {}", String.join(", ", argp.getFiles()));
             AbstractSequenceClassifier<CoreLabel> classifier =

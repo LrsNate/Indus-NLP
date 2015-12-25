@@ -21,11 +21,17 @@ public class Anonymizer {
         try {
             ArgumentParser argp = ArgumentParser.parse(args);
             InputProvider ip = new InputProvider(argp.getFiles());
+            EntityDictionary ed = new EntityDictionary();
             logger.info("Loading classifier: {}", String.valueOf(argp.getClassifier()));
-            logger.info("Using files: {}", String.join(", ", argp.getFiles()));
             NamedEntityRecognizer ner = new NamedEntityRecognizer(argp.getClassifier());
-            BufferedReader br = ip.nextReader();
-            logger.info(ner.classify(br.readLine()));
+            BufferedReader br;
+            while ((br = ip.nextReader()) != null) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    System.out.println(ed.anonymize(ner.classify(line)));
+                }
+                System.out.println();
+            }
         } catch (ParseException e) {
             System.exit(-1);
         } catch (Exception e) {

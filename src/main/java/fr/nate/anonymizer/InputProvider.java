@@ -40,18 +40,21 @@ public class InputProvider {
         }
     }
 
-    private BufferedReader getStdinReader() throws NoSuchElementException {
+    private BufferedReader getStdinReader() {
         if (!_wasCalled) {
             _wasCalled = true;
             _logger.debug("Opening a reader on stdin...");
             return new BufferedReader(new InputStreamReader(System.in));
         } else {
-            throw new NoSuchElementException("stdin buffered reader was already sent");
+            return null;
         }
     }
 
-    private BufferedReader getFileReader() throws NoSuchElementException {
+    private BufferedReader getFileReader() {
         try {
+            if (_files.isEmpty()) {
+                return null;
+            }
             String path = _files.removeFirst();
             _logger.debug("Opening a reader on file: {}", path);
             return new BufferedReader(new FileReader(path));

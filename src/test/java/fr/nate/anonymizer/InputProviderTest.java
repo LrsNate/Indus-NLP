@@ -28,9 +28,6 @@ public class InputProviderTest {
     public void theStdinReaderShouldBeUnique() {
         _stdinProvider.nextReader();
         Assert.assertFalse(_stdinProvider.hasNextReader());
-        try {
-            _stdinProvider.nextReader();
-            Assert.fail("Exception expected");
-        } catch (NoSuchElementException e) {}
+        Assert.assertNull(_stdinProvider.nextReader());
     }
 }

@@ -3,10 +3,12 @@ package fr.nate.anonymizer;
 import edu.stanford.nlp.ie.AbstractSequenceClassifier;
 import edu.stanford.nlp.ie.crf.CRFClassifier;
 import edu.stanford.nlp.ling.CoreLabel;
+import edu.stanford.nlp.process.CoreLabelTokenFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created by Nate on 24/12/15.
@@ -24,7 +26,7 @@ public class NamedEntityRecognizer {
         if (_classifier == null) {
             loadClassifier();
         }
-        return _classifier.classifyToString(str);
+        return _classifier.classifyToString(str, "tsv", false);
     }
 
     private void loadClassifier() throws IOException, ClassNotFoundException {

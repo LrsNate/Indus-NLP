@@ -1,10 +1,12 @@
-\documentclass{article}
+\documentclass[11pt]{article}
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[francais]{babel}
 
 \usepackage{parskip}
+
+\usepackage{float}
 
 \title{Anonymisation d'emails}
 \author{Antoine Lafouasse}
@@ -33,6 +35,78 @@ Cette étude se propose de présenter une solution logicielle visant à anonymis
 un corpus écrit, consistant en données issues d'emails.
 
 \section{Présentation des données}
+
+Les données sur lesquelles nous travaillons proviennent entièrement du corpus
+Enron, qui sont un ensemble de communications entre employés d'une entreprise
+sous forme d'emails en langue anglaise.
+
+Ces données nous sont présentées entièrement sous forme de texte brut, ce qui
+veut dire que les métadonnées propres aux emails et qui dépassent le cadre du
+corps du message sont encodées avec une représentation textuelle spécifique,
+avec chaque champ défini sur une ligne en en-tête du message, comportant le
+nom du champ et sa valuer séparés par un point-virgule (\texttt{:}).
+
+\begin{figure}[H]
+\begin{verbatim}
+Message-ID: <16673858.1075846656569.JavaMail.evans@thyme>
+Date: Mon, 13 Dec 1999 06:00:00 -0800 (PST)
+From: susan.scott@enron.com
+To: ahebert@akingump.com
+Subject: kitty
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-From: Susan Scott
+X-To: "Ann M. Hebert" <ahebert@akingump.com>
+X-cc:
+X-bcc:
+X-Folder: \Susan_Scott_Dec2000_June2001_1\Notes Folders\All documents
+X-Origin: SCOTT-S
+X-FileName: sscott3.nsf
+
+Here is a kitty for your office.
+
+I really miss mine now that they are in Kitty Jail!
+\end{verbatim}
+\caption{Exemple d'email issu du corpus Enron}
+\label{fig:emailex}
+\end{figure}
+
+L'exemple~\ref{fig:emailex} nous montre cet encodage des métadonnées propres aux
+emails, et nous donne par là-même l'occasion d'aborder les mentions et traces
+d'identification susceptibles d'apparaître dans notre corpus ; nous tâcherons
+d'en établir une liste, bien que non-exhaustive.
+
+\paragraph{Noms de personnes}
+
+La façon la plus simple et évidente d'identifier une personne est d'utiliser son
+nom. Ces données sont particulièrement courantes dans les emails dans la mesure
+où les noms de l'expéditeur et des destinataires sont généralement générés
+automatiquement par l'annuaire ou le serveur mail des entreprises.
+
+Les noms peuvent également survenir sous forme de mention au sens courant du
+terme, lorsqu'une personne en évoque une autre dans le corps du message. Ce type
+de mention est généralement plus approximatif que les noms rapatriés
+automatiquement, en ce qu'ils peuvent présenter une variation typographique, des
+contractions, des surnoms ou mêmes des fautes d'orthographe --- ce qui ajoute
+à la difficulté d'identification des entités nommées par la mention à laquelle
+nous nous intéressons.
+
+\paragraph{Adresses email}
+
+Ces mentions peuvent servir d'identification plus formelle que les noms, puisque
+les adresses email doivent être respectées exactement --- au détail près
+qu'elles sont insensibles à la casse : les fautes d'orthographe, contractions
+et alias sont ainsi beaucoup plus rares sur les adresses email que les noms
+de personnes. De plus, ces adresses suivent un formatage précis qui les rendent
+faciles à détecter, et dans un cadre professionnel elles comportent bien souvent
+le nom et le prénom du propriétaire directement dans le texte de l'adresse.
+Ainsi, les adresses email sont un élément d'identification particulièrement
+puissant dans le corpus Enron qui consiste de communications professionnelles.
+
+\paragraph{Noms d'organisations}
+
+\paragraph{Dates et heures}
 
 \section{Description de la procédure utilisée}
 

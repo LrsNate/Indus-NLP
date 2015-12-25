@@ -16,7 +16,7 @@ public class NamedEntityRecognizer {
     private AbstractSequenceClassifier<CoreLabel> _classifier;
     private final Logger _logger = LogManager.getLogger(getClass());
 
-    private static final String _emailRegexp = "^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$";
+    private static final String _emailRegexp = "^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)\\W*";
 
     public NamedEntityRecognizer(String path) {
         _classifierPath = path;

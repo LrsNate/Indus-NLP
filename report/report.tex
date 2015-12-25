@@ -48,25 +48,36 @@ nom du champ et sa valuer séparés par un point-virgule (\texttt{:}).
 
 \begin{figure}[H]
 \begin{verbatim}
-Message-ID: <16673858.1075846656569.JavaMail.evans@thyme>
-Date: Mon, 13 Dec 1999 06:00:00 -0800 (PST)
+Message-ID: <25013650.1075846656636.JavaMail.evans@thyme>
+Date: Tue, 14 Dec 1999 10:19:00 -0800 (PST)
 From: susan.scott@enron.com
-To: ahebert@akingump.com
-Subject: kitty
+To: brycoop@gte.net
+Subject: Re: Hi
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 X-From: Susan Scott
-X-To: "Ann M. Hebert" <ahebert@akingump.com>
+X-To: brycoop@gte.net
 X-cc:
 X-bcc:
 X-Folder: \Susan_Scott_Dec2000_June2001_1\Notes Folders\All documents
 X-Origin: SCOTT-S
 X-FileName: sscott3.nsf
 
-Here is a kitty for your office.
+Bryan,
 
-I really miss mine now that they are in Kitty Jail!
+Are you still having a great time?  So what is Bali like?
+The only images I can summon are Gauguin's paintings, but
+weren't those of Tahiti?
+
+Things are pretty good here.  Lots of Christmas parties,
+lots of Christmas cheer, etc.  Not a whole lot going on at
+the office, for a change. Really, though, I think I would
+much rather be in Bali.
+
+Take care.
+
+S.
 \end{verbatim}
 \caption{Exemple d'email issu du corpus Enron}
 \label{fig:emailex}
@@ -106,11 +117,122 @@ puissant dans le corpus Enron qui consiste de communications professionnelles.
 
 \paragraph{Noms d'organisations}
 
-\paragraph{Dates et heures}
+Les noms d'organisation sont un élément d'identification majeur au sens où ils
+permettent une identification au même titre que les noms de personnes, mais ils
+peuvent se révéler plus difficiles à identifier, pour des raisons diverses.
+
+En effet, les noms d'organisation peuvent être des noms inventés de toutes
+pièces, ou être pris d'un vocabulaire soit de langue étrangère, soit spécifique
+à un domaine --- il devient ainsi difficile d'identifier une organisation avec
+le simple critère d'un mot inconnu, puisqu'il est presque impossible de le
+distinguer des autres néologismes.
+
+Un nom d'organisation peut également être un mot très courant, qui devient
+encore plus difficile à identifier lorsque le nom de l'organisation n'est
+souvent que partiellement mentionné --- par exemple, \textit{Apple Inc.} n'est
+souvent mentionnée que par le nom \textit{Apple}, ce qui rend la mention
+difficile à identifier puisque faisant partie du vocabulaire courant. Cette
+remarque s'appliquent aussi pour les organisations dont le nom forme un
+acronyme, qui lui fait partie du vocabulaire courant --- souvent
+intentionnellement.
 
 \section{Description de la procédure utilisée}
 
-\section{Analyse des limites et résultats}
+\subsection{Démarche générale}
+
+L'approche que nous avons retenue pour anonymiser ces emails est de retenir en
+mémoire les mentions que nous rencontrons dans les données, de sorte à opérer
+un remplacement mot-à-mot de ces mentions de manière cohérente : en gardant
+une table d'équivalence entre les mentions et leur remplacement, nous sommes
+certains de la stabilité de notre anonymisation. Ainsi, nous préservons
+l'exploitabilité des données résultantes pour des tâches s'appuyant sur les
+entités nommées, comme la résolution de coréférence.
+
+Ainsi, notre démarche d'anonymisation s'articule en trois étapes :
+
+\begin{itemize}
+\item Segmentation de l'entrée (tokenisation)
+\item Reconnaissance des entités nommées
+\item Remplacement des entités nommées
+\end{itemize}
+
+\subsection{Choix de technologies}
+
+La conception du projet a principalement été conduite par une volonté d'utiliser
+au maximum des outils existants, de sorte à limiter nos développements à 
+l'articulation de ces outils ensemble --- c'est particulièrement le cas pour
+la reconnaissance d'entités nommées, dont l'implémentation n'est pas triviale.
+
+Notre choix d'environnement s'est porté sur Java, qui nous garantissait non
+seulement une portabilité du code, mais nous permettait aussi de mettre
+rapidement en place un environnement complet avec une intégration continue et
+un package managing efficace et largement utilisé --- en l'occurrence, Apache
+Maven.
+
+Notre choix pour la reconnaissance d'entités nommées s'est ainsi porté sur
+le module NER de Stanford, qui fournissait non seulement des outils en interface
+graphique et en ligne de commande pour l'expérimenter et en observer les
+résultats, mais aussi directement la bibliothèque compilée dans une archive JAR
+et un exemple d'utilisation du code ; ainsi, la documentation fournie du code
+nous a séduits et conforté notre sélection. Le seul point noir que nous retenons
+à cette solution est que comme l'université de Stanford ne semblait pas avoir
+de serveur Nexus, nous avons du créer à la main un artefact contenant le module
+de NER et l'intégrer dans notre projet Maven. Ce détail est préjudiciable en
+termes de légèreté du dépôt GiT, mais n'a pas altéré la flexibilité de 
+l'architecture du projet autour de Maven.
+
+Nous avons ainsi pu nous appuyer très largement sur la puissance de ce module,
+en n'ayant à ajouter qu'une simple heuristique pour reconnaître les adresses
+email en plus des entités nommées, adresses dont la fréquence est dûe à l'aspect
+épistolaire de notre corpus. Pour la tokenisation nous avons opté pour une
+simplification du processus en laissant la NER de Stanford opérer sa propre
+tokenisation et travailler à partir de ses résultats.
+
+\section{Analyse des résultats et limites}
+
+\begin{figure}[H]
+\begin{verbatim}
+Message-ID :
+Date : Tue , 14 Dec 1999 10:19:00 -0800 -LRB- PST -RRB-
+From : EMAIL_0
+To : EMAIL_1
+Subject : Re : Hi
+Mime-Version : 1.0
+Content-Type : text/plain ; charset = us-ascii
+Content-Transfer-Encoding : 7bit
+X-From : PERSON_2 PERSON_3
+X-To : EMAIL_1
+X-cc :
+X-bcc :
+X-Folder : \ Susan_Scott_Dec2000_June2001_1 \ Notes Folders \ All documents
+X-Origin : SCOTT-S
+X-FileName : sscott3.nsf
+
+PERSON_4 ,
+
+Are you still having a great time ?  So what is LOCATION_5 like ?
+The only images I can summon are PERSON_6 's paintings , but
+were n't those of LOCATION_7 ?
+
+Things are pretty good here .  Lots of Christmas parties , lots
+of Christmas cheer , etc. .  Not a whole lot going on at the
+office , for a change . Really , though , I think I would much
+rather be in LOCATION_5 .
+
+Take care .
+
+S.
+\end{verbatim}
+\caption{Exemple d'email issu du corpus Enron}
+\label{fig:emailanon}
+\end{figure}
+
+L'exemple~\ref{fig:emailanon} est l'exemple~\ref{fig:emailex} anonymisé
+par notre outil. Il nous montre que les cas simples ont été correctement
+traités, à savoir les adresses email, les noms de personnes et les noms
+de lieux qui ont été correctement remplacés En revanche, la signature contractée
+(\textit{``S.''}) et le nom dissimulé dans un chemin de dossier ont été laissés
+tels quels.
 
 \section*{Conclusion}
 \addcontentsline{toc}{section}{Conclusion}

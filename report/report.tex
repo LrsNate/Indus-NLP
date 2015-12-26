@@ -181,11 +181,12 @@ de NER et l'intégrer dans notre projet Maven. Ce détail est préjudiciable en
 termes de légèreté du dépôt GiT, mais n'a pas altéré la flexibilité de 
 l'architecture du projet autour de Maven.
 
-Nous avons ainsi pu nous appuyer très largement sur la puissance de ce module,
+Nous avons ainsi pu nous appuyer très largement sur la puissance de ce module
+--- qui est un classifieur supervisé utilisant les CRF ---
 en n'ayant à ajouter qu'une simple heuristique pour reconnaître les adresses
-email en plus des entités nommées, adresses dont la fréquence est dûe à l'aspect
-épistolaire de notre corpus. Pour la tokenisation nous avons opté pour une
-simplification du processus en laissant la NER de Stanford opérer sa propre
+email en plus des entités nommées --- adresses dont la fréquence est dûe à
+l'aspect épistolaire de notre corpus. Pour la tokenisation nous avons opté pour
+une simplification du processus en laissant la NER de Stanford opérer sa propre
 tokenisation et travailler à partir de ses résultats.
 
 \section{Analyse des résultats et limites}
@@ -234,8 +235,76 @@ de lieux qui ont été correctement remplacés En revanche, la signature contrac
 (\textit{``S.''}) et le nom dissimulé dans un chemin de dossier ont été laissés
 tels quels.
 
+Cet exemple nous donne l'occasion d'évoquer plusieurs cas de figure qui ne sont
+pas correctement reconnus par notre modèle d'anonymisation :
+
+\paragraph{Adresses email dissimulées}
+
+Ce type d'adresses est peu courant dans une communication intra-entreprise,
+mais le devient beaucoup plus lorsqu'on touche un message ou une publication qui
+est accessible sur Internet : pour éviter l'acquisition d'une adresse email
+par des robots dont le rôle est de crawler internet à la recherche d'adresses,
+il est occasionnel de les voir sous une forme qui n'est (idéalement) pas
+détectable par une machine, mais tout de même lisible par un être humain, 
+par exemple : \texttt{antoine [point] lafouasse [at] student [point] 42 [point]
+fr}. On voit facilement qu'avec une adresse formatée ainsi, une expression
+rationnelle visant une adresse mail sera incapable de reconnaître, et donc
+d'anonymiser ce type d'adresse. On peut alors imaginer un ensemble
+d'heuristiques qui permettraient de reconnaître ces dissimulations, mais comme
+celles-ci ne sont pas normalisées elles sont généralement laissées à
+l'imagination de l'expéditeur, leur forme peut varier de manière difficilement
+prédictible.
+
+\paragraph{Contractions de noms, surnoms}
+
+Ces deux formes peuvent être résumées avec le même problème d'une forme
+alternative qui réfère à une entité déjà connue, qui plus est avec une
+expression qui ne ressemble pas forcément à une entité nommée ; nous faisons
+ainsi face à deux facettes d'un problème.
+
+Premièrement, ces formes sont susceptibles de mettre en échec le module de
+reconnaissance d'entités nommées, qui pour notre cas n'a pas été spécifiquement
+entraîné sur un corpus épistolaire. Stanford ayant seulement fourni un jeu de
+modèles entraînés par leurs soins mais pas de solution permettant d'entraîner
+nos propres modèles, cela nous contraindrait soit à abandonner cet outil
+entièrement, soit penser un mécanisme complémentaire à la NER de Stanford, soit
+un deuxième modèle --- partiel --- de reconnaissance d'entités nommées. Bien
+entendu, l'un autant que l'autre est très coûteux en moyens et en temps.
+
+Deuxièmement, même si on arrive à reconnaître ces expressions comme des entités
+nommées, nous nous retrouvons avec plusieurs formes pouvant référer à une même
+entité. Si nous opérons le remplacement tel que nous l'avons implémenté, forme
+par forme, on se retrouve avec une perte d'information importante puisque les
+formes des mentions elles-mêmes sont perdues et ne peuvent pas être utilisées
+en résolution d'anaphore --- et ce, parfois pour des contractions simples comme
+des surnoms courants, des diminutifs, ou des paraphes, qui sont des cas
+élémentaires en résolution de coréférence. Nous pourrions ainsi implémenter
+nous-mêmes un mécanisme de résolution de coréférence, ce qui a également un coût
+élevé puisqu'il s'agit d'une tâche de sémantique computationnelle à part
+entière.
+
+\paragraph{Noms dissimulés dans les tokens}
+
+Ce cas est particulièrement visible dans l'exemple~\ref{fig:emailanon}, avec le
+nom Susan Scott dissimulé dans un chemin de dossier et qui, de fait, n'est pas
+relevé par le module de NER. Nous avons de toute évidence affaire à une lacune
+de tokenisation, dont la résolution est cependant très risquée puisque non
+seulement la proportion de bruit dans le token est très importante, mais la
+segmentation elle-même de l'entitée nommée à l'intérieur peutêtre très
+variable.
+
+Une solution pourrait être d'écrire un module complémentaire spécifique
+aux chemins de dossiers, sachant que leur segmentation est libre --- obtenir un
+résultat satisfaisant sera donc vraisemblablement difficile, et à vrai dire il
+s'agit peut-être de la plus grande difficulté à laquelle notre anonymiseur fait
+face.
+
+\newpage
+
 \section*{Conclusion}
 \addcontentsline{toc}{section}{Conclusion}
+
+
 
 \newpage
 \tableofcontents

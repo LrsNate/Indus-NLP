@@ -1,14 +1,12 @@
 package fr.nate.anonymizer;
 
-import edu.stanford.nlp.ie.AbstractSequenceClassifier;
-import edu.stanford.nlp.ie.crf.CRFClassifier;
-import edu.stanford.nlp.ling.CoreLabel;
+import fr.nate.anonymizer.io.IoProvider;
+import fr.nate.anonymizer.io.IoProviderFactory;
 import org.apache.commons.cli.ParseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 
 /**
  * Created by Nate on 25/11/15.
@@ -20,7 +18,7 @@ public class Anonymizer {
     public static void main(String[] args) {
         try {
             ArgumentParser argp = ArgumentParser.parse(args);
-            InputProvider ip = new InputProvider(argp.getFiles());
+            IoProvider ip = IoProviderFactory.getProvider(argp.getFiles());
             EntityDictionary ed = new EntityDictionary();
             logger.info("Loading classifier: {}", String.valueOf(argp.getClassifier()));
             NamedEntityRecognizer ner = new NamedEntityRecognizer(argp.getClassifier());
@@ -28,9 +26,8 @@ public class Anonymizer {
             while ((br = ip.nextReader()) != null) {
                 String line;
                 while ((line = br.readLine()) != null) {
-                    System.out.println(ed.anonymize(ner.classify(line)));
+                    ip.writeReturn(ed.anonymize(ner.classify(line)));
                 }
-                System.out.println();
             }
         } catch (ParseException e) {
             System.exit(-1);

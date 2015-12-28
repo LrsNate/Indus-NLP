@@ -304,7 +304,20 @@ face.
 \section*{Conclusion}
 \addcontentsline{toc}{section}{Conclusion}
 
+L'approche que nous avons choisie dès le départ, de nous appuyer au maximum sur
+des outils existants, nous a permis d'arriver assez vite à une baseline
+fonctionnant sur les cas élémentaires de manière satisfaisante. De plus, le
+choix de Java et de Maven nous a permis de nous ouvrir à un package managing
+puissant et simple, et aussi à une architecture objet qui nous a donné
+l'occasion de mettre en place une base de code simple à étendre.
 
+Cette baseline est cependant loin de l'état de l'art, et ce particulièrement
+sur des cas propres au format d'emails de notre corpus : nous pouvons par
+exemple citer les adresses email obfusquées, ou les noms dissimulés dans des
+chemins de dossiers ou autres tokens complexes. Ces cas, pour la plupart,
+nécessitent une refonte soit du tokeniseur soit du module de reconnaissance
+d'entités nommées, ce qui représente un temps de travail considérable, plus
+particulièrement quand on considère que les cas manqués sont très spécifiques.
 
 \newpage
 \tableofcontents

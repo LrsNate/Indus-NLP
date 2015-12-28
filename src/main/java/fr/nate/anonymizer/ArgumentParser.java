@@ -5,7 +5,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Created by Nate on 26/11/15.
+ * The command-line arguments parser. It relies on the Apache Commons
+ * CLI library.
  */
 public class ArgumentParser {
 
@@ -15,6 +16,7 @@ public class ArgumentParser {
      * Factory method for the arguments parser.
      * @param args the args argument to the main method.
      * @return an instance of ArgumentParser.
+     * @throws ParseException if the -c argument is missing.
      */
     public static ArgumentParser parse(String[] args) throws ParseException {
         logger.debug("Parsing arguments: [{}]", String.join(", ", args));

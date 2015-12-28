@@ -9,12 +9,16 @@ import org.apache.logging.log4j.Logger;
 import java.io.BufferedReader;
 
 /**
- * Created by Nate on 25/11/15.
+ * The anonymizer program.
  */
 public class Anonymizer {
 
     private static Logger logger = LogManager.getLogger(Anonymizer.class);
 
+    /**
+     * The main class for the anonymizer program.
+     * @param args The command line arguments.
+     */
     public static void main(String[] args) {
         try {
             ArgumentParser argp = ArgumentParser.parse(args);

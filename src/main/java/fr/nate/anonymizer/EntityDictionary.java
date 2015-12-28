@@ -6,13 +6,22 @@ import org.apache.logging.log4j.Logger;
 import java.util.HashMap;
 
 /**
- * Created by Nate on 24/12/15.
+ * The model used to anonymize named entities. It relies on simple
+ * word-to-word replacement, and identifies using the lowercase form
+ * of the tokens. Its input must be tab-separated values from the
+ * Stanford NER classifier.
  */
 public class EntityDictionary {
 
     private final HashMap<String, String> _entities = new HashMap<>();
     private final Logger _logger = LogManager.getLogger(getClass());
 
+    /**
+     * Anonymizes the sentence given in argument, and updates the
+     * replacement model.
+     * @param line A sentence in TSV format.
+     * @return The sentence anonymized and cleaned of its NER tags.
+     */
     public String anonymize(String line) {
         learnEntities(line);
         return cleanOutput(replaceEntities(line));

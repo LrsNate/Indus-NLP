@@ -3,16 +3,23 @@ package fr.nate.anonymizer.io;
 import java.io.*;
 
 /**
- * Created by Nate on 28/12/15.
+ * An IoProvider based on standard input.
+ * Its output return will be the standard input.
  */
 public class StdinProvider implements IoProvider {
 
     private boolean _wasCalled;
 
+    /**
+     * Creates a new IoProvider based on Stdin.
+     */
     public StdinProvider() {
         _wasCalled = false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BufferedReader nextReader() {
         if (_wasCalled) {
@@ -23,11 +30,17 @@ public class StdinProvider implements IoProvider {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void writeReturn(String line) throws IOException {
         System.out.println(line);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void closeReturnWriter() throws IOException {
     }

@@ -9,7 +9,8 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 
 /**
- * Created by Nate on 24/12/15.
+ * A wrapper around the Stanford NER module. It adds a regex to identify
+ * email addresses to complement its output.
  */
 public class NamedEntityRecognizer {
     private String _classifierPath;
@@ -18,10 +19,22 @@ public class NamedEntityRecognizer {
 
     private static final String _emailRegexp = "^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)\\W*";
 
+    /**
+     * Loads a classifier from an archive file containing a pre-trained model.
+     * @param path A path to a pre-trained classifier.
+     */
     public NamedEntityRecognizer(String path) {
         _classifierPath = path;
     }
 
+    /**
+     * Tags a sentence with NER annotations.
+     * @param str The sentence to be tagged.
+     * @return The sentence tagged in TSV format.
+     * @throws IOException If the classifiergst
+     * could not be loaded.
+     * @throws ClassNotFoundException If the classifier could not be loaded.
+     */
     public String classify(String str) throws IOException, ClassNotFoundException{
         if (_classifier == null) {
             loadClassifier();
